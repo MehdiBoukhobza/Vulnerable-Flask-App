@@ -7,30 +7,32 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   bandit:
     runs-on: ubuntu-latest
+
     steps:
-      # Step 1: Checkout the repository
+      # Étape 1 : Vérifier le code source
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Python environment
+      # Étape 2 : Configurer l'environnement Python
       - name: Setup Python
         uses: actions/setup-python@v3
         with:
           python-version: '3.9'
 
-      # Step 3: Install Bandit
+      # Étape 3 : Installer Bandit
       - name: Install Bandit
         run: pip install bandit
 
-      # Step 4: Run Bandit on the application
+      # Étape 4 : Exécuter Bandit
       - name: Run Bandit Security Scan
         run: bandit -r app/ -f json -o bandit-report.json
 
-      # Step 5: Upload the Bandit report as an artifact
+      # Étape 5 : Télécharger le rapport de Bandit
       - name: Upload Bandit Report
         uses: actions/upload-artifact@v3
         with:
