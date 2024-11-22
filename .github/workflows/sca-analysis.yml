@@ -1,15 +1,38 @@
-name: SCA Analysis
+name: Bandit Security Analysis
+
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
-  sca:
+  bandit:
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      # Step 2: Set up Python environment
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'
+
+      # Step 3: Install Bandit
       - name: Install Bandit
         run: pip install bandit
-      - name: Run Bandit security scan
-        run: bandit -r .
+
+      # Step 4: Run Bandit on the application
+      - name: Run Bandit Security Scan
+        run: bandit -r app/ -f json -o bandit-report.json
+
+      # Step 5: Upload the Bandit report as an artifact
+      - name: Upload Bandit Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: bandit-report
+          path: bandit-report.json
